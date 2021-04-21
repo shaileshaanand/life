@@ -1,5 +1,7 @@
-name: Update json
-on: workflow_dispatch    
+name: Update json  
+on:
+  schedule:
+    - cron: '*/5 * * * *'
 
 jobs:
   build:
