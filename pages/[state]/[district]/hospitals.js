@@ -1,11 +1,24 @@
 import React from "react";
-import { useRouter } from "next/router";
 import { hospitalByDistrict } from "../../../lib/api";
-import { statePaths, humanize } from "../../../lib/utils";
+import { statePaths, humanize, parseDateString } from "../../../lib/utils";
+import Head from "next/head";
+import Breadcumb from "../../../components/Breadcumb";
 
 export default function Medicine({ state, district, hospitalByDistrict }) {
   return (
     <section className="flex flex-col items-center md:pt-10">
+      <Head>
+        <title>
+          Hospitals in {humanize(district)} , {humanize(state)}
+        </title>
+      </Head>
+      <Breadcumb
+        list={[
+          { href: `/${state}`, name: humanize(state) },
+          { href: `/${state}/${district}`, name: humanize(district) },
+          { href: null, name: "Hospitals" },
+        ]}
+      />
       <h1 className="mt-4 font-black text-6xl text-gray-900 md:text-left text-center">
         {humanize(district)}
       </h1>
@@ -21,7 +34,7 @@ export default function Medicine({ state, district, hospitalByDistrict }) {
                 <div className="font-bold">{p.email}</div>
                 <div>{p.description}</div>
                 <div>{p.address}</div>
-                <div>{p.createdTime}</div>
+                <div>{parseDateString(p.createdTime)}</div>
               </div>
               <div className="flex flex-col">
                 <a href={`tel:${p.phone1}`}>{p.phone1}</a>
@@ -47,7 +60,7 @@ export async function getStaticProps({ params }) {
 
 export async function getStaticPaths() {
   return {
-    paths: statePaths("hospital"),
+    paths: statePaths("hospitals"),
     fallback: false,
   };
 }
